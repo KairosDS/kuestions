@@ -7,7 +7,7 @@
     "platinum-elements": "PolymerElements/platinum-elements#1.0.1",
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
-    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.7"
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8"
   },
   "devDependencies": {
     "web-component-tester": "*",

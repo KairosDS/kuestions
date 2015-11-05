@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Polymer Starter Kit" />
-  <title>Polymer Starter Kit</title>
+  <title>Kuestions</title>
   <!-- Place favicon.ico in the `app/` directory -->
 
   <!-- Chrome for Android theme color -->
@@ -97,7 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Toolbar icons -->
           <a href="/login">
-            <paper-icon-button icon="account-circle"></paper-icon-button>
+            <paper-icon-button icon="account-circle" class="white"></paper-icon-button>
           </a>
 
           <!-- Application name -->
@@ -120,7 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1">
                 <h1 class="paper-font-display2">Bienvenido!</h1>
 
-                <p class="paper-font-subhead">Kuestions es una aplicaicón de preguntas y respuestas que evaluará las capacidades técnicas de los kandidatos.</p>
+                <p class="paper-font-subhead">Kuestions es una aplicación de preguntas y respuestas que evaluará las capacidades técnicas de los kandidatos.</p>
 
                 <p class="paper-font-body2">¿Estás buscando una nueva oportundad laboral? Demuestra tu potencial respondiendo las <i>Kuestions</i>.</p>
               </paper-material>
@@ -144,6 +144,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </a>
               </paper-material>
               </paper-menu>
+            </section>
+
+            <section data-route="login">
+              <paper-material elevation="1">
+                <kuestions-login></kuestions-login>
+              </paper-material>
             </section>
 
             <section data-route="user-info">

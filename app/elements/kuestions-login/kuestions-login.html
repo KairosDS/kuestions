@@ -1,0 +1,171 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-auth.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
+<dom-module id="kuestions-login">
+  <template>
+    <h2 class="paper-font-display2">Welcome <strong>[[currentuser.githubData.github.displayName]]</strong>!</h2>
+    <paper-button raised on-tap="login" hidden$="{{computeLoginHidden(statusKnown, user)}}" class="colorful">
+      Please, login with <strong>Github</strong>
+      <iron-icon icon="account-circle"></iron-icon>
+    </paper-button>
+    <paper-button raised on-tap="logout" hidden$="{{computeLogoutHidden(statusKnown, user)}}" class="colorful">
+      Logout
+      <iron-icon icon="lock-open"></iron-icon>
+    </paper-button>
+    <firebase-auth
+      id="firebaseLogin"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      location="https://kuestions.firebaseio.com"
+      provider="github"
+      on-error="errorHandler">
+    </firebase-auth>
+
+    <h3>Login status:</h3>
+    <p>{{computeLoginStatus(statusKnown, user)}}</p>
+
+    <h3>User ID:</h3>
+    <pre>{{user.uid}}</pre>
+
+    <firebase-document
+      id="firebaseDocument"
+      log
+      location="https://kuestions.firebaseio.com/users/[[user.uid]]"
+      data="{{currentuser}}">
+    </firebase-document>
+
+    <br>
+    <div id="message">[[message]]</div>
+    <br>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'kuestions-login',
+
+    properties: {
+      provider: {
+        type: String,
+        value: 'anonymous'
+      },
+
+      message: {
+        type: String,
+        value: ''
+      },
+
+      email: {
+        type: String,
+        value: ''
+      },
+
+      password: {
+        type: String,
+        value: ''
+      },
+
+      user: {
+        type: Object,
+        value: null
+      },
+
+      statusKnown: {
+        type: Boolean
+      }
+    },
+
+    ready: function () {
+      //console.log('ready');
+      this.addEventListener('login', this._onLogin);
+    },
+
+    _onLogin: function (e) {
+      //console.log('login event', e.detail.user);
+      this.currentuser = {
+        githubData: e.detail.user
+      };
+    },
+
+    login: function() {
+      var params;
+
+      try {
+        params = JSON.parse(this.params);
+      } catch (e) {
+        params = null;
+      }
+
+      if (this.provider == 'password') {
+        params = params || {};
+        params.email = this.email;
+        params.password = this.password;
+      }
+
+      this.$.firebaseLogin.login(params);
+    },
+
+    logout: function() {
+      this.$.firebaseLogin.logout();
+    },
+
+    errorHandler: function(e) {
+      this.message = 'Error: ' + e.detail.message;
+    },
+
+    userSuccessHandler: function(e) {
+      this.message = e.type + ' success!';
+    },
+
+    createUserHandler: function(e) {
+      this.$.firebaseLogin.createUser(this.email, this.password);
+    },
+
+    changePasswordHandler: function(e) {
+      this.$.firebaseLogin.changePassword(this.email, this.password, this.newPassword);
+    },
+
+    resetPasswordHandler: function(e) {
+      this.$.firebaseLogin.sendPasswordResetEmail(this.email);
+    },
+
+    computePasswordHidden: function(provider) {
+      return provider !== 'password';
+    },
+
+    computeCreateUserDisabled: function(email, password) {
+      return !email || !password;
+    },
+
+    computeChangePasswordDisabled: function(email, password, newPassword) {
+      return !email || !password || !newPassword;
+    },
+
+    computeResetPasswordDisabled: function(email, password) {
+      return !email || !password;
+    },
+
+    computeRemoveUserDisabled: function(email, password) {
+      return !email || !password;
+    },
+
+    computeLoginHidden: function(statusKnown, user) {
+      return !statusKnown || !!user;
+    },
+
+    computeLogoutHidden: function(statusKnown, user) {
+      return !statusKnown || !user;
+    },
+
+    computeLoginStatus: function(statusKnown, user) {
+      if (statusKnown && user) {
+        return 'Logged in';
+      }
+
+      if (statusKnown) {
+        return 'Logged out';
+      }
+
+      return 'Unknown (checking status...)';
+    }
+  });
+</script>
