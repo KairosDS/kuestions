@@ -1,2 +1,2 @@
 # kuestions
-Questions and answer app
+Questions and answers app
