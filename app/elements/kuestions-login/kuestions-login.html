@@ -31,7 +31,7 @@
       id="firebaseDocument"
       log
       location="https://kuestions.firebaseio.com/users/[[user.uid]]"
-      data="{{currentuser}}">
+      data="{{currentUser}}">
     </firebase-document>
 
     <br>
@@ -81,9 +81,11 @@
 
     _onLogin: function (e) {
       //console.log('login event', e.detail.user);
-      this.currentuser = {
+      this.currentUser = {
         githubData: e.detail.user
       };
+      document.querySelector('#loginIcon').icon = null;
+      document.querySelector('#loginIcon').src = e.detail.user.github.profileImageURL;
     },
 
     login: function() {
@@ -95,7 +97,7 @@
         params = null;
       }
 
-      if (this.provider == 'password') {
+      if (this.provider === 'password') {
         params = params || {};
         params.email = this.email;
         params.password = this.password;
