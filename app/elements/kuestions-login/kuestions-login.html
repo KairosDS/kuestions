@@ -30,7 +30,7 @@
     <firebase-document
       id="firebaseDocument"
       log
-      location="https://kuestions.firebaseio.com/users/[[user.uid]]"
+      location="[[computeDocumentLocation(user.id)]]"
       data="{{currentUser}}">
     </firebase-document>
 
@@ -78,14 +78,18 @@
       //console.log('ready');
       this.addEventListener('login', this._onLogin);
     },
+    
+    attached: function() {
+      this.loginIcon = document.querySelector('#loginIcon');
+    },
 
     _onLogin: function (e) {
       //console.log('login event', e.detail.user);
       this.currentUser = {
         githubData: e.detail.user
       };
-      document.querySelector('#loginIcon').icon = null;
-      document.querySelector('#loginIcon').src = e.detail.user.github.profileImageURL;
+      this.loginIcon.icon = null;
+      this.loginIcon.src = e.detail.user.github.profileImageURL;
     },
 
     login: function() {
@@ -129,7 +133,11 @@
     resetPasswordHandler: function(e) {
       this.$.firebaseLogin.sendPasswordResetEmail(this.email);
     },
-
+    
+    computeDocumentLocation: function(userId) {
+      return 'https://kuestions.firebaseio.com/users/' + userId;
+    },
+    
     computePasswordHidden: function(provider) {
       return provider !== 'password';
     },
