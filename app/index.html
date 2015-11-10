@@ -133,10 +133,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
               <iron-selector>
               <paper-material elevation="1">
-                <a href="/kuestions/1">
-                  <paper-item name="1">Javascript</paper-item>
+                <a href="/kuestions/0">
+                  <paper-item name="0">Javascript</paper-item>
                 </a>
-                <a href="/kuestions/2">
+                <a href="/kuestions/1">
                   <paper-item>Q-Adopter</paper-item>
                 </a>
                 <a href="/kuestions/2">
@@ -152,12 +152,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            <section data-route="user-info">
+            <section data-route="kuestion">
               <paper-material elevation="1">
-                <h2 class="paper-font-display2">
-                User:<span>{{params.name}}</span>
-                </h2>
-                <div>This is <span>{{params.name}}</span>'s section</div>
+                <kuestions-question test-id="[[params.testId]]"></kuestions-question>
               </paper-material>
             </section>
 

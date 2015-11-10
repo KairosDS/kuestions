@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<dom-module id="kuestions-question">
+  <template>
+    <style>
+    .iron-selected {
+      background-color: var(--default-primary-color);
+      color: white;
+    }
+  </style>
+    <template is="dom-repeat" items="[[questions]]" as="question">
+      <h2>[[question.question]]</h2>
+      <paper-menu>
+        <template is="dom-repeat" items="[[question.answers]]" as="answer">
+          <paper-item>[[answer]]</paper-item>
+        </template>
+      </paper-menu>
+    </template>
+    <firebase-collection
+      order-by-child="height"
+      limit-to-first="1"
+      location="[[computeDocumentLocation(testId)]]"
+      data="{{questions}}"></firebase-collection>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'kuestions-question',
+
+    properties: {
+      testId: String
+    },
+    
+    computeDocumentLocation: function(id) {
+      return 'https://kuestions.firebaseio.com/tests/' + id + '/questions';
+    },
+  });
+</script>
