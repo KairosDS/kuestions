@@ -103,7 +103,7 @@
     chrono: function(){
       this.end = new Date();
       this.time = new Date(this.end - this.start);
-      this.chronoTime = this.time.getSeconds() + "." + this.time.getMilliseconds();
+      this.chronoTime = this.time.getSeconds() + '.' + this.time.getMilliseconds();
       if(this.selected === null) {
         requestAnimationFrame(this.chrono.bind(this));
       }
