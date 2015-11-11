@@ -30,7 +30,7 @@
     <firebase-document
       id="firebaseDocument"
       log
-      location="[[computeDocumentLocation(user.id)]]"
+      location="[[computeDocumentLocation(user.uid)]]"
       data="{{currentUser}}">
     </firebase-document>
 
@@ -122,15 +122,15 @@
       this.message = e.type + ' success!';
     },
 
-    createUserHandler: function(e) {
+    createUserHandler: function() {
       this.$.firebaseLogin.createUser(this.email, this.password);
     },
 
-    changePasswordHandler: function(e) {
+    changePasswordHandler: function() {
       this.$.firebaseLogin.changePassword(this.email, this.password, this.newPassword);
     },
 
-    resetPasswordHandler: function(e) {
+    resetPasswordHandler: function() {
       this.$.firebaseLogin.sendPasswordResetEmail(this.email);
     },
     
