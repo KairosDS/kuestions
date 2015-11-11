@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
 
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <dom-module id="kuestions-question">
@@ -10,33 +11,102 @@
       background-color: var(--default-primary-color);
       color: white;
     }
-  </style>
-    <template is="dom-repeat" items="[[questions]]" as="question">
-      <h2>[[question.question]]</h2>
-      <paper-menu>
+    paper-card {
+      display: block;
+    }
+    paper-menu paper-item:hover {
+      cursor: pointer;
+    }
+    </style>
+    <p>[[chronoTime]]</p>
+    <paper-card hidden$="[[hideQuestion]]" heading="[[question.question]]">
+      <div class="card-content" hidden$="[[hideCodeExample]]">
+        <pre><code>[[question.codeExample]]</code></pre>
+      </div>
+      <paper-menu attr-for-selected="name" selected="{{selected}}" class="card-actions">
         <template is="dom-repeat" items="[[question.answers]]" as="answer">
-          <paper-item>[[answer]]</paper-item>
+          <paper-item name="[[answer.__firebaseKey__]]">[[answer.text]]</paper-item>
         </template>
       </paper-menu>
-    </template>
-    <firebase-collection
-      order-by-child="height"
+    </paper-card>
+    <firebase-document
+      log
+      id="fb"
       limit-to-first="1"
-      location="[[computeDocumentLocation(testId)]]"
-      data="{{questions}}"></firebase-collection>
+      location="[[location]]"
+      data="{{data}}"></firebase-document>
   </template>
 </dom-module>
 
 <script>
+  (function() {
+    window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  })();
   Polymer({
     is: 'kuestions-question',
 
     properties: {
-      testId: String
+      location: String,
+      selected: {
+        type: String,
+        notify: true,
+        observer: '_answerSelected'
+      },
+      hideQuestion: {
+        type: Boolean,
+        value: true
+      },
+      hideCodeExample: {
+        type: Boolean,
+        value: true
+      },
+      question: Object,
+      countDown: {
+        type: Number,
+        value: 3
+      }
     },
-    
-    computeDocumentLocation: function(id) {
-      return 'https://kuestions.firebaseio.com/tests/' + id + '/questions';
+    observers: [
+      '_dataReceived(data)'
+    ],
+    ready: function(){
+      this.chronoTime = 'Loading...';
     },
+    _answerSelected: function(){
+      if(this.selected !== null) {
+        // TODO: Send answer to server.
+        console.log('Answer: %s', this.selected);
+      }
+    },
+    _dataReceived: function(data) {
+      this.question = data[0];
+      this.hideCodeExample = !this.question.codeExample;
+      if(!this.question.start) {
+        this.chronoTime = this.countDown;
+        this.intervalId = setInterval(this._questionReady.bind(this), 1000);
+      }
+    },
+    _questionReady: function(){
+      this.countDown--;
+      if(this.countDown > 0) {
+        this.chronoTime = this.countDown.toString();
+      } else if (this.countDown === 0) {
+        this.chronoTime = 'Go!';
+      } else {
+        clearInterval(this.intervalId);
+        this.hideQuestion = false;
+        this.start = new Date();
+        //this.$.fb.set('data.0.start', this.start);
+        this.chrono();
+      }
+    },
+    chrono: function(){
+      this.end = new Date();
+      this.time = new Date(this.end - this.start);
+      this.chronoTime = this.time.getSeconds() + "." + this.time.getMilliseconds();
+      if(this.selected === null) {
+        requestAnimationFrame(this.chrono.bind(this));
+      }
+    }
   });
 </script>

@@ -69,13 +69,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-toolbar>
 
         <!-- Drawer Content -->
-        <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
+        <paper-menu class="list" attr-for-selected="data-route" selected="{{menuItemSelected}}" on-iron-select="onMenuSelect">
           <a data-route="home" href="/">
             <iron-icon icon="home"></iron-icon>
             <span>Home</span>
           </a>
 
-          <a data-route="users" href="/kuestions">
+          <a data-route="kuestions" href="/kuestions">
             <iron-icon icon="info"></iron-icon>
             <span>Kuestions</span>
           </a>
@@ -119,9 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="home">
               <paper-material elevation="1">
                 <h1 class="paper-font-display2">Bienvenido!</h1>
-
                 <p class="paper-font-subhead">Kuestions es una aplicación de preguntas y respuestas que evaluará las capacidades técnicas de los kandidatos.</p>
-
                 <p class="paper-font-body2">¿Estás buscando una nueva oportundad laboral? Demuestra tu potencial respondiendo las <i>Kuestions</i>.</p>
               </paper-material>
             </section>
@@ -130,20 +128,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1">
                 <h2 class="paper-font-display2">Kuestions</h2>
                 <p>¿Estás preparado? Elige el set de <i>Kuestions</i> que más se adapte a ti.</p>
+                <kuestions-tests selected="{{testSelected}}" location="[[firebaseTests]]"></kuestions-tests>
               </paper-material>
-              <iron-selector>
-              <paper-material elevation="1">
-                <a href="/kuestions/0">
-                  <paper-item name="0">Javascript</paper-item>
-                </a>
-                <a href="/kuestions/1">
-                  <paper-item>Q-Adopter</paper-item>
-                </a>
-                <a href="/kuestions/2">
-                  <paper-item>DevOps</paper-item>
-                </a>
-              </paper-material>
-              </paper-menu>
             </section>
 
             <section data-route="login">
@@ -153,9 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </section>
 
             <section data-route="kuestion">
-              <paper-material elevation="1">
-                <kuestions-question test-id="[[params.testId]]"></kuestions-question>
-              </paper-material>
+              <kuestions-question selected="{{answerSelected}}" location="[[firebaseQuestions(params.testId)]]"></kuestions-question>
             </section>
 
             <section data-route="about">

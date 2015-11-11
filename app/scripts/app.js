@@ -14,6 +14,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
+  app.appName = 'Kuestions';
+  
+  // Firebase locations
+  app.firebaseLocation = 'https://kuestions.firebaseio.com/';
+  app.firebaseTests = app.firebaseLocation + '/tests/';
+  app.firebaseQuestions = function(testId){
+    return app.firebaseTests + testId + '/questions/';
+  };
   
   app.displayInstalledToast = function() {
     document.querySelector('#caching-complete').show();

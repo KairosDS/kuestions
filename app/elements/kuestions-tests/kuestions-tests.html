@@ -1,0 +1,45 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<dom-module id="kuestions-tests">
+  <template>
+    <style>
+    .iron-selected {
+      background-color: var(--default-primary-color);
+      color: white;
+    }
+    paper-menu paper-item:hover {
+      cursor: pointer;
+    }
+    </style>
+    <paper-menu attr-for-selected="name" selected="{{selected}}">
+      <template is="dom-repeat" items="[[tests]]" as="test">
+        <paper-item name="[[test.__firebaseKey__]]">[[test.name]]</paper-item>
+      </template>
+    </paper-menu>
+    <firebase-collection
+      location="[[location]]"
+      data="{{tests}}"></firebase-collection>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'kuestions-tests',
+    properties: {
+      location: String,
+      selected: {
+        type: String,
+        notify: true,
+        observer: '_testSelected'
+      }
+    },
+    _testSelected: function(newValue, oldValue){
+      if(this.selected !== null) {
+        page('/kuestions/' + this.selected);
+      }
+    }
+  });
+</script>
