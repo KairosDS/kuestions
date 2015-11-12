@@ -24,12 +24,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app.menuItemSelected = 'kuestions';
       app.route = 'kuestions';
       app.testSelected = null;
+      app.firebaseTests = app.getFirebaseTests();
     });
 
     page('/kuestions/:testId', function (data) {
       app.menuItemSelected = 'kuestions';
       app.route = 'kuestion';
       app.params = data.params;
+      app.firebaseQuestions = app.getFirebaseQuestions(app.params.testId);
       app.answerSelected = null;
     });
 

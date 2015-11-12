@@ -18,9 +18,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   
   // Firebase locations
   app.firebaseLocation = 'https://kuestions.firebaseio.com/';
-  app.firebaseTests = app.firebaseLocation + '/tests/';
-  app.firebaseQuestions = function(testId){
-    return app.firebaseTests + testId + '/questions/';
+  app.getFirebaseTests = function(){
+    return app.firebaseLocation + 'tests/';
+  }
+  app.getFirebaseQuestions = function(testId){
+    var location = "";
+    if(testId) {
+      location = app.getFirebaseTests() + testId + '/questions/';
+    }
+    return location;
   };
   
   app.displayInstalledToast = function() {

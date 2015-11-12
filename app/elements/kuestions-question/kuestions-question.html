@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
 
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
@@ -24,17 +25,19 @@
         <pre><code>[[question.codeExample]]</code></pre>
       </div>
       <paper-menu attr-for-selected="name" selected="{{selected}}" class="card-actions">
-        <template is="dom-repeat" items="[[question.answers]]" as="answer">
-          <paper-item name="[[answer.__firebaseKey__]]">[[answer.text]]</paper-item>
+        <template is="dom-repeat" items="[[answers]]" as="answer" index-as="key">
+          <paper-item name="[[key]]">[[answer.text]]</paper-item>
         </template>
       </paper-menu>
     </paper-card>
     <firebase-document
-      log
       id="fb"
-      limit-to-first="1"
       location="[[location]]"
       data="{{data}}"></firebase-document>
+    <firebase-collection
+      log
+      location="[[answerLocation]]"
+      data="{{answers}}"></firebase-collection>
   </template>
 </dom-module>
 
@@ -79,11 +82,15 @@
       }
     },
     _dataReceived: function(data) {
-      this.question = data[0];
-      this.hideCodeExample = !this.question.codeExample;
-      if(!this.question.start) {
-        this.chronoTime = this.countDown;
-        this.intervalId = setInterval(this._questionReady.bind(this), 1000);
+      if(data) {
+        var fbKey = Object.keys(data)[0];
+        this.question = data[fbKey];
+        this.answerLocation = this.location + fbKey + '/answers/'; 
+        this.hideCodeExample = !this.question.codeExample;
+        if(!this.question.start) {
+          this.chronoTime = this.countDown;
+          this.intervalId = setInterval(this._questionReady.bind(this), 1000);
+        }
       }
     },
     _questionReady: function(){
@@ -97,7 +104,7 @@
         this.hideQuestion = false;
         this.start = new Date();
         //this.$.fb.set('data.0.start', this.start);
-        this.chrono();
+        requestAnimationFrame(this.chrono.bind(this));
       }
     },
     chrono: function(){
