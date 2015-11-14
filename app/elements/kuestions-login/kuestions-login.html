@@ -81,6 +81,7 @@
     
     attached: function() {
       this.loginIcon = document.querySelector('#loginIcon');
+      this.userName = document.querySelector('#userName');
     },
 
     _onLogin: function (e) {
@@ -90,6 +91,7 @@
       };
       this.loginIcon.icon = null;
       this.loginIcon.src = e.detail.user.github.profileImageURL;
+      this.userName.textContent = e.detail.user.github.displayName;
     },
 
     login: function() {
