@@ -40,7 +40,7 @@
         </paper-radio-group>
       </div>
       <div class="horizontal-section nav-section">
-        <paper-button hidden$="[[!answered]]" on-click="goNext" raised>Siguiente</paper-button>
+        <paper-button id="next" hidden$="[[!answered]]" raised>Siguiente</paper-button>
       </div>
     </paper-card>
     <firebase-document
@@ -84,13 +84,17 @@
       answered:{
         type: Boolean,
         value: false
+      },
+      loading: function(){debugger;
+        console.log('its being called, mkay');
+        return !(foo == bar);
       }
     },
     observers: [
       '_dataReceived(data)'
     ],
     listeners: {
-      goNext: 'goNext'
+      'next.click': 'goNext'
     },
     ready: function(){
       this.chronoTime = 'Loading...';
@@ -131,7 +135,7 @@
     },
     goNext:function(){
       this.hideQuestion=true;
-
+debugger;
       //TODO call to next question
 
 
