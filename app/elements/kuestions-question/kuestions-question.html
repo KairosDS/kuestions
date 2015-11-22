@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/animated-countdown/animated-countdown.html">
+
 <dom-module id="kuestions-question">
   <template>
     <style>
@@ -21,8 +23,19 @@
     paper-menu paper-item:hover {
       cursor: pointer;
     }
+    animated-countdown {
+      font-family: Roboto, sans-serif;
+      font-weight: 300;
+      color: var(--default-primary-color);
+      font-size: 200px;
+    }
     </style>
-    <p>[[chronoTime]]</p>
+    <animated-countdown
+      id="countDown"
+      auto-start
+      seconds="3">
+    </animated-countdown>
+
     <paper-card hidden$="[[hideQuestion]]" heading="[[question.question]]">
       <div class="card-content" hidden$="[[hideCodeExample]]">
         <pre><code>[[question.codeExample]]</code></pre>
@@ -38,7 +51,6 @@
       location="[[location]]"
       data="{{data}}"></firebase-document>
     <firebase-collection
-      log
       location="[[answerLocation]]"
       data="{{answers}}"></firebase-collection>
   </template>
@@ -75,8 +87,12 @@
     observers: [
       '_dataReceived(data)'
     ],
-    ready: function(){
-      this.chronoTime = 'Loading...';
+    listeners: {
+      'countDown.animated-countdown-finish': 'countDownFinish'
+    },
+    countDownFinish: function(e){
+      e.target.style.display = 'none';
+      this._questionReady();
     },
     _answerSelected: function(){
       if(this.selected !== null) {
@@ -88,32 +104,19 @@
       if(data) {
         var fbKey = Object.keys(data)[0];
         this.question = data[fbKey];
-        this.answerLocation = this.location + fbKey + '/answers/'; 
+        this.answerLocation = this.location + fbKey + '/answers/';
         this.hideCodeExample = !this.question.codeExample;
-        if(!this.question.start) {
-          this.chronoTime = this.countDown;
-          this.intervalId = setInterval(this._questionReady.bind(this), 1000);
-        }
       }
     },
     _questionReady: function(){
-      this.countDown--;
-      if(this.countDown > 0) {
-        this.chronoTime = this.countDown.toString();
-      } else if (this.countDown === 0) {
-        this.chronoTime = 'Go!';
-      } else {
-        clearInterval(this.intervalId);
-        this.hideQuestion = false;
-        this.start = new Date();
-        //this.$.fb.set('data.0.start', this.start);
-        requestAnimationFrame(this.chrono.bind(this));
-      }
+      this.hideQuestion = false;
+      this.start = new Date();
+      // this.$.fb.set('data.0.start', this.start);
+      // requestAnimationFrame(this.chrono.bind(this));
     },
     chrono: function(){
       this.end = new Date();
       this.time = new Date(this.end - this.start);
-      this.chronoTime = this.time.getSeconds() + '.' + this.time.getMilliseconds();
       if(this.selected === null) {
         requestAnimationFrame(this.chrono.bind(this));
       }

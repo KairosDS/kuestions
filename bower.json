@@ -7,7 +7,8 @@
     "platinum-elements": "PolymerElements/platinum-elements#1.0.1",
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
-    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8"
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8",
+    "animated-countdown": "kcmr/animated-countdown#~0.2.3"
   },
   "devDependencies": {
     "web-component-tester": "*",
